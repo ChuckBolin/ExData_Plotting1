@@ -1,5 +1,5 @@
 # Reads the datafile rows, loads into a data.frame, cleans
-# up header names, and convertes global.active.power from
+# up header names, and converts global.active.power from
 # factor to numeric. RETURNS data.frame for two days
 # *********************************************************
 setup=function(){
@@ -8,30 +8,30 @@ setup=function(){
   names(df)=tolower(colnames(df))
   names(df)=gsub("_",".",colnames(df))
   df$global.active.power=as.numeric(as.character(df$global.active.power))
+  date.time=paste(as.character(df$date,"%m/%d/%Y"),as.character(df$time,"%H:%M"),sep=" ")
+  dt=strptime(date.time, format="%d/%m/%Y %H:%M")
+  df$date.time=dt
   
+  names(df$date.time)="date.time"
   return(df)  
 }
 
 # Creates assignment plot 2 using a data.frame created by
 # setup() function
 # *********************************************************
-createPlot2=function(df=as.data.frame(),...){
+createPlot2=function(df=as.data.frame(),saveFile=TRUE,...){
 
   #setup png
-  png(filename="plot2.png")
+  if(saveFile==TRUE)
+    png(filename="plot2.png")
   
   # plots the data
-  dateRange=as.Date(df$date,"%d/%m/%Y")
-  
-  plot(df$global.active.power, 
-       type="l", 
-       ylab="Global Active Power(kilowatts)",
-       xlab="Index",       
-       xaxt="n"
+  plot(df$date.time, df$global.active.power,
+       type="l", xlab="",
+       ylab="Global Active Power(kilowatts)"
        )
-  
-  axis(1, at=dateRange, labels=weekdays(dateRange,abbreviate=TRUE))
-  
+
   #completes action, saves plot
-  dev.off()  
+  if(saveFile==TRUE)
+    dev.off()  
 }

@@ -8,17 +8,22 @@ setup=function(){
   names(df)=tolower(colnames(df))
   names(df)=gsub("_",".",colnames(df))
   df$global.active.power=as.numeric(as.character(df$global.active.power))
+  date.time=paste(as.character(df$date,"%m/%d/%Y"),as.character(df$time,"%H:%M"),sep=" ")
+  dt=strptime(date.time, format="%d/%m/%Y %H:%M")
+  df$date.time=dt
   
-  return(df)  
+  names(df$date.time)="date.time"
+  return(df)   
 }
 
 # Creates assignment plot 1 using a data.frame created by
 # setup() function
 # *********************************************************
-createPlot1=function(df=as.data.frame(),...){
+createPlot1=function(df=as.data.frame(),saveFile=TRUE,...){
 
   #setup png
-  png(filename="plot1.png")
+  if(saveFile==TRUE)
+    png(filename="plot1.png")
   
   # plots the histogram
   hist(df$global.active.power,
@@ -31,5 +36,6 @@ createPlot1=function(df=as.data.frame(),...){
        breaks=12)
        
   #completes action, saves plot
-  dev.off()  
+  if(saveFile==TRUE)
+    dev.off()  
 }
