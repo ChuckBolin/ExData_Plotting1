@@ -30,40 +30,70 @@ setup=function(){
   return(df)  
 }
 
-# Creates assignment plot 2 using a data.frame created by
+# Creates assignment plot 4 using a data.frame created by
 # setup() function
 # *********************************************************
-createPlot3=function(df=as.data.frame(),saveFile=TRUE,...){
+createPlot4=function(df=as.data.frame(),saveFile=TRUE,...){
 
   #setup png
   if(saveFile==TRUE)
-    png(filename="plot3.png")
+    png(filename="plot4.png")
   
-  # plots the first series
-  plot(x=df$date.time,
-       y=as.numeric(df$sub.metering.1) - 2,
-       type="l",
-       xlab="",
-       ylab="Global Active Power(kilowatts)",       
+  # create 2x2 frame to hold four plots
+  par(mfrow=c(2,2))
+  par(mar=c(4,4,1,1))
+  
+  # plots the top-left data chart
+  #****************************************************  TOP-LEFT
+  plot(df$date.time, df$global.active.power,
+       type="l", xlab="",
+       ylab="Global Active Power(kilowatts)"
+       )
+  box(which="plot", lty="solid", col="black")
+
+  # plots the top-right data chart
+  #****************************************************  TOP-RIGHT
+  plot(df$date.time, df$voltage,
+       type="l", xlab="datetime",
+       ylab="Voltage",
+       )
+  box(which="plot", lty="solid", col="black")
+  
+  # plots the bottom-left data chart
+  #****************************************************  BOTTOM-LEFT
+  plot(df$date.time, df$sub.metering.1 - 2,
+       type="l", xlab="",
+       ylab="Global Active Power(kilowatts)",        
        axes=TRUE
        )
 
   # plots the second series
-  lines(df$date.time, as.numeric(df$sub.metering.2) - 2, col="red")
+  lines(df$date.time, df$sub.metering.2 - 2, col="red")
   
   # plots the third series
-  lines(df$date.time, as.numeric(df$sub.metering.3), col="blue")
+  lines(df$date.time, df$sub.metering.3, col="blue")
 
   # adds legend to the top-right
   legend("topright", 
-         legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),
+         c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),
          col=c("black","red","blue"),
          lwd = .75,
-         cex = .75,  
-         )
+         cex = .75)
            
   # adds border around plot       
   box(which="plot", lty="solid", col="black")
+
+  # plots the bottom-right data chart
+  #****************************************************    BOTTOM-RIGHT
+  plot(df$date.time, df$global.reactive.power,
+       type="l", xlab="datetime",
+       ylab="Global_reactive_power",
+       ylim=c(0.0,0.5),       
+       axes=TRUE
+       )
+  #axis(2,at=c(0.0,0.1,0.2,0.3,0.4,0.5))       
+  box(which="plot", lty="solid", col="black")       
+
   
   #completes action, saves plot
   if(saveFile==TRUE)
