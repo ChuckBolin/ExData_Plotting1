@@ -19,20 +19,38 @@ setup=function(){
 # Creates assignment plot 2 using a data.frame created by
 # setup() function
 # *********************************************************
-createPlot2=function(df=as.data.frame(),saveFile=TRUE,...){
+createPlot3=function(df=as.data.frame(),saveFile=TRUE,...){
 
   #setup png
   if(saveFile==TRUE)
-    png(filename="plot2.png")
+    png(filename="plot3.png")
   
-  # plots the data
-  plot(df$date.time, df$global.active.power,
+  # plots the first series
+  plot(df$date.time, as.numeric(df$sub.metering.1) - 2,
        type="l", xlab="",
-       ylab="Global Active Power(kilowatts)"
+       ylab="Global Active Power(kilowatts)",       
+       axes=FALSE
        )
 
+  # plots the second series
+  lines(df$date.time, as.numeric(df$sub.metering.2) - 2, col="red")
+  
+  # plots the third series
+  lines(df$date.time, as.numeric(df$sub.metering.3), col="blue")
+
+  # adds legend to the top-right
+  legend("topright", 
+         c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),
+         col=c("black","red","blue"),
+         lwd = .75,
+         cex = .75,  
+         )
+         
+  axis(2,at=c(0,10,20,30))
+           
+  # adds border around plot       
   box(which="plot", lty="solid", col="black")
-       
+  
   #completes action, saves plot
   if(saveFile==TRUE)
     dev.off()  
